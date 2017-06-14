@@ -69,9 +69,11 @@ model = NewsChain()
 optimizer = optimizers.SGD() # TODO: change this to Adam
 optimizer.setup(model)
 
-# from IPython import embed
-# from IPython.terminal.embed import InteractiveShellEmbed
-#
-# embed()
+from IPython import embed
+from IPython.terminal.embed import InteractiveShellEmbed
 
-# x = Variable(np.array(dense).astype(np.float32).reshape(1, ?))
+embed()
+
+x = Variable(np.array(dense).astype(np.float32).reshape(1, 16))
+# sports: 2
+# y = [0.0]

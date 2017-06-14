@@ -48,3 +48,24 @@ dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
 # from IPython.terminal.embed import InteractiveShellEmbed
 #
 # embed()
+
+import numpy as np
+import matplotlib.pyplot as plt
+import chainer
+from chainer import cuda, Function, gradient_check, Variable, optimizers, serializers, utils
+from chainer import Link, Chain, ChainList
+import chainer.functions as F
+import chainer.links as L
+
+class NewsChain(Chain):
+    def __init__(self):
+        super(NewsChain, self).__init__(
+            l1 = L.Linear(10, 8),
+            l2 = L.Linear(8, 8)
+        )
+
+    def __call__(self, x, y):
+        return F.mean_squared_error(self.fwd(x, y))
+
+    def fwd(self, x, y):
+        return F.softmax(self.l1(x))

@@ -44,11 +44,6 @@ dictionary = corpora.Dictionary([words])
 vec = dictionary.doc2bow(words)
 dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
 
-# from IPython import embed
-# from IPython.terminal.embed import InteractiveShellEmbed
-#
-# embed()
-
 import numpy as np
 import matplotlib.pyplot as plt
 import chainer
@@ -69,3 +64,14 @@ class NewsChain(Chain):
 
     def fwd(self, x, y):
         return F.softmax(self.l1(x))
+
+model = NewsChain()
+optimizer = optimizers.SGD() # TODO: change this to Adam
+optimizer.setup(model)
+
+# from IPython import embed
+# from IPython.terminal.embed import InteractiveShellEmbed
+#
+# embed()
+
+# x = Variable(np.array(dense).astype(np.float32).reshape(1, ?))

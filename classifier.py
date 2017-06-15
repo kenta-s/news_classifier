@@ -7,6 +7,10 @@
 # And gensim
 # $ pip install gensim
 
+import numpy as np
+from chainer import Variable, optimizers
+from news_chain import NewsChain
+
 import MeCab
 import json
 # usage of json is below... (I'm a beginner in Python :P)
@@ -43,27 +47,6 @@ while node:
 dictionary = corpora.Dictionary([words])
 vec = dictionary.doc2bow(words)
 dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
-
-import numpy as np
-import matplotlib.pyplot as plt
-import chainer
-from chainer import cuda, Function, gradient_check, Variable, optimizers, serializers, utils
-from chainer import Link, Chain, ChainList
-import chainer.functions as F
-import chainer.links as L
-
-class NewsChain(Chain):
-    def __init__(self):
-        super(NewsChain, self).__init__(
-            l1 = L.Linear(10, 8), # what if the words are less than 10 words?
-            l2 = L.Linear(8, 8)
-        )
-
-    def __call__(self, x, y):
-        return F.mean_squared_error(self.fwd(x), y)
-
-    def fwd(self, x):
-        return F.softmax(self.l1(x))
 
 model = NewsChain()
 optimizer = optimizers.SGD() # TODO: change this to Adam

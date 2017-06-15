@@ -68,16 +68,17 @@ for news in news_list:
 
     # print(y)
 
-embed()
-# text = "【ナダル快挙 感動表現できない】「赤土の王者」ナダルが全仏10度目のV。「今は感動ばかりで言葉が見つかりません」と優勝杯を力強く抱きかかえ、会心の笑顔。"
-# node = mecab.parseToNode(text)
-#
-# words = []
-# while node:
-#     meta = node.feature.split(",")
-#     if meta[0] == "名詞":
-#         words.append(node.surface)
-#     node = node.next
+text = "【ナダル快挙 感動表現できない】「赤土の王者」ナダルが全仏10度目のV。「今は感動ばかりで言葉が見つかりません」と優勝杯を力強く抱きかかえ、会心の笑顔。"
+node = mecab.parseToNode(text)
+
+words = []
+while node:
+    meta = node.feature.split(",")
+    if meta[0] == "名詞":
+        words.append(node.surface)
+    node = node.next
+
+# embed()
 
 # # save
 # dictionary.save_as_text('hoge.txt')
@@ -85,10 +86,18 @@ embed()
 # # load
 # dictionary = corpora.Dictionay.load_from_text('hoge.txt')
 
-# dictionary = corpora.Dictionary([words])
-# vec = dictionary.doc2bow(words)
-# dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
-# cut_dense = dense[0:10]
+dictionary = corpora.Dictionary([words])
+vec = dictionary.doc2bow(words)
+dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
+cut_dense = dense[0:10]
+
+xt = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
+yt = model.fwd(xt)
+ans = yt.data
+
+print(ans)
+# embed()
+# nrow, ncol = ans.shape
 
 # for i in range(100):
 #     x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))

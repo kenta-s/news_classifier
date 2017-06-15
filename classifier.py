@@ -23,6 +23,13 @@ import pandas as pd
 # foo = pd.read_csv('sample_news/yahoonews.csv')
 # foo['content'] # this should be a column name
 
+news = pd.read_csv('sample_news/yahoonews.csv')
+
+# from IPython import embed
+# from IPython.terminal.embed import InteractiveShellEmbed
+#
+# embed()
+
 from gensim import corpora, matutils
 
 mecab = MeCab.Tagger("-Ochasen")

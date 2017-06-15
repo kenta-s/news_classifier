@@ -60,20 +60,25 @@ class NewsChain(Chain):
         )
 
     def __call__(self, x, y):
-        return F.mean_squared_error(self.fwd(x, y))
+        return F.mean_squared_error(self.fwd(x), y)
 
-    def fwd(self, x, y):
+    def fwd(self, x):
         return F.softmax(self.l1(x))
 
 model = NewsChain()
 optimizer = optimizers.SGD() # TODO: change this to Adam
 optimizer.setup(model)
 
-from IPython import embed
-from IPython.terminal.embed import InteractiveShellEmbed
-
-embed()
-
-x = Variable(np.array(dense).astype(np.float32).reshape(1, 16))
+cut_dense = dense[0:10]
+x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
 # sports: 2
-# y = [0.0]
+y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
+y = y[0:8]
+y = Variable(np.array(y).astype(np.float32).reshape(1, 8))
+
+loss = model(x, y)
+print(loss)
+# from IPython import embed
+# from IPython.terminal.embed import InteractiveShellEmbed
+#
+# embed()

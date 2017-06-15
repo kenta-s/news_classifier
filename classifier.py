@@ -70,13 +70,18 @@ optimizer = optimizers.SGD() # TODO: change this to Adam
 optimizer.setup(model)
 
 cut_dense = dense[0:10]
-x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
-# sports: 2
-y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
-y = y[0:8]
-y = Variable(np.array(y).astype(np.float32).reshape(1, 8))
 
-loss = model(x, y)
+for i in range(100):
+    x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
+    # sports: 2
+    y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
+    y = y[0:8]
+    y = Variable(np.array(y).astype(np.float32).reshape(1, 8))
+    model.zerograds()
+    loss = model(x, y)
+    loss.backward()
+    optimizer.update()
+
 print(loss)
 # from IPython import embed
 # from IPython.terminal.embed import InteractiveShellEmbed

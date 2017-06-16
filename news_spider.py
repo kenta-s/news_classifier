@@ -1,7 +1,6 @@
 from scrapy.spiders import Spider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http.request import Request
-from news_item import NewsItem
 
 import json, codecs
 # usage of json is below... (I'm a beginner in Python :P)

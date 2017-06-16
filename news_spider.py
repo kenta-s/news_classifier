@@ -3,7 +3,7 @@ from scrapy.selector import HtmlXPathSelector
 from scrapy.http.request import Request
 from news_item import NewsItem
 
-import json
+import json, codecs
 # usage of json is below... (I'm a beginner in Python :P)
 #
 # foo = open('categories.json', 'r')
@@ -21,13 +21,17 @@ class NewsSpider(Spider):
     }
 
     def parse(self, response):
+        file_name = 'unlabelled_data/yahoonews.json'
+        f = open(file_name, 'r')
+        tweets = json.load(f)
         tweet_list = 'li.stream-item'
-        # embed()
         for tweet_item in response.css(tweet_list):
-            tweet_id = tweet_item.css('li::attr(data-item-id)').extract()
-            tweet_text = tweet_item.css('p.tweet-text::text').extract()
-
-        # news_json = open('yahoonews.json', 'w')
+            tweet_id = tweet_item.css('li::attr(data-item-id)').extract()[0]
+            tweet_text = tweet_item.css('p.tweet-text::text').extract()[0]
+            tweets[tweet_id] = tweet_text
+        news_json = codecs.open(file_name, 'w', 'utf-8')
+        json.dump(tweets, news_json, ensure_ascii=False)
+        news_json.close()
             # yield scrapy.Request(tweet, callback=self.parse_item)
 
     def parse_item(self, response):

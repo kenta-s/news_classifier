@@ -1,4 +1,4 @@
-from scrapy.spiders import BaseSpider
+from scrapy.spiders import Spider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http.request import Request
 from news_item import NewsItem
@@ -6,7 +6,7 @@ from news_item import NewsItem
 from IPython import embed
 from IPython.terminal.embed import InteractiveShellEmbed
 
-class NewsSpider(BaseSpider):
+class NewsSpider(Spider):
     name = 'news_spider'
 
     start_urls = ['https://twitter.com/YahooNewsTopics']
@@ -22,6 +22,7 @@ class NewsSpider(BaseSpider):
             yield scrapy.Request(tweet, callback=self.parse_item)
 
     def parse_item(self, response):
+        return True
         # TODO: implement
 
         # urls = []
@@ -34,4 +35,4 @@ class NewsSpider(BaseSpider):
         #     'urls': urls,
         # }
 
-# scrapy runspider qiita_spider.py -o advent_calendar.json
+# scrapy runspider news_spider.py -o foo.json

@@ -45,11 +45,6 @@ dictionary_name = 'words.dict'
 dictionary = corpora.Dictionary.load(dictionary_name)
 for key in news_list:
     news = news_list[key]
-    y = np.zeros(3).astype(np.float32)
-    index = int(news['label'])
-    y[index] = 1.0
-    y = Variable(y).reshape(1, 3)
-
     text = news['content']
     node = mecab.parseToNode(text)
     words = []
@@ -62,23 +57,39 @@ for key in news_list:
     new_dictionary = corpora.Dictionary([words])
     dictionary.merge_with(new_dictionary)
     dictionary.save(dictionary_name)
-    vec = dictionary.doc2bow(words)
-    dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
-    cut_dense = dense[0:10]
 
-    x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
-    # sports: 2
-    # y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
-    # y = y[0:8]
-    # y = Variable(np.array(y).astype(np.float32).reshape(1, 8))
-    model.zerograds()
-    loss = model(x, y)
-    loss.backward()
-    optimizer.update()
+for i in range(100):
+    for key in news_list:
+        news = news_list[key]
+        text = news['content']
+        node = mecab.parseToNode(text)
+        words = []
+        while node:
+            meta = node.feature.split(",")
+            if meta[0] == "名詞":
+                words.append(node.surface)
+            node = node.next
 
-    # print(y)
+        y = np.zeros(3).astype(np.float32)
+        index = int(news['label'])
+        y[index] = 1.0
+        y = Variable(y).reshape(1, 3)
+        vec = dictionary.doc2bow(words)
+        dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
+        # cut_dense = dense[0:10]
 
-text = "【ナダル快挙 感動表現できない】「赤土の王者」ナダルが全仏10度目のV。「今は感動ばかりで言葉が見つかりません」と優勝杯を力強く抱きかかえ、会心の笑顔。"
+        # x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1204))
+        x = Variable(np.array(dense).astype(np.float32).reshape(1, 1204))
+        # sports: 2
+        # y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
+        # y = y[0:8]
+        # y = Variable(np.array(y).astype(np.float32).reshape(1, 8))
+        model.zerograds()
+        loss = model(x, y)
+        loss.backward()
+        optimizer.update()
+
+text = "【森下悠里が結婚 昨年から交際】タレントの森下悠里がインスタグラムで、昨年末から交際していた男性と6月8日に結婚したことを報告。10年来の友人だという。"
 node = mecab.parseToNode(text)
 
 words = []
@@ -96,12 +107,12 @@ while node:
 # # load
 # dictionary = corpora.Dictionay.load_from_text('hoge.txt')
 
-dictionary = corpora.Dictionary([words])
 vec = dictionary.doc2bow(words)
 dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
-cut_dense = dense[0:10]
+# cut_dense = dense[0:10]
 
-xt = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 10))
+# xt = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1204))
+xt = Variable(np.array(dense).astype(np.float32).reshape(1, 1204))
 yt = model.fwd(xt)
 ans = yt.data
 

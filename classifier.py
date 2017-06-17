@@ -30,19 +30,24 @@ from IPython import embed
 from IPython.terminal.embed import InteractiveShellEmbed
 # embed()
 
-import pandas as pd
+# import pandas as pd
 # usage of pandas is below
 # foo = pd.read_csv('sample_news/yahoonews.csv')
 # foo['content'] # this should be a column name
 
-df = pd.read_csv('sample_news/yahoonews.csv')
-news_list = df.values
-for news in news_list:
+# df = pd.read_csv('sample_news/yahoonews.csv')
+# news_list = df.values
+f = open('sample_news/yahoo_news.json', 'r')
+news_list = json.load(f)
+f.close()
+for key in news_list:
+    news = news_list[key]
     y = np.zeros(8).astype(np.float32)
-    y[news[2]] = 1.0
+    index = int(news['label'])
+    y[index] = 1.0
     y = Variable(y).reshape(1, 8)
 
-    text = news[1]
+    text = news['content']
     node = mecab.parseToNode(text)
     words = []
     while node:

@@ -17,4 +17,6 @@ class NewsChain(Chain):
         return F.mean_squared_error(self.fwd(x), y)
 
     def fwd(self, x):
-        return F.softmax(self.l1(x))
+        h1 = F.softmax(self.l1(x))
+        h2 = self.l2(h1)
+        return h2

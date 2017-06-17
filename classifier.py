@@ -78,8 +78,8 @@ for i in range(100):
         dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
         # cut_dense = dense[0:10]
 
-        # x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1204))
-        x = Variable(np.array(dense).astype(np.float32).reshape(1, 1204))
+        # x = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1853))
+        x = Variable(np.array(dense).astype(np.float32).reshape(1, 1853))
         # sports: 2
         # y = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # refactor this shit
         # y = y[0:8]
@@ -111,8 +111,8 @@ vec = dictionary.doc2bow(words)
 dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
 # cut_dense = dense[0:10]
 
-# xt = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1204))
-xt = Variable(np.array(dense).astype(np.float32).reshape(1, 1204))
+# xt = Variable(np.array(cut_dense).astype(np.float32).reshape(1, 1853))
+xt = Variable(np.array(dense).astype(np.float32).reshape(1, 1853))
 yt = model.fwd(xt)
 ans = yt.data
 

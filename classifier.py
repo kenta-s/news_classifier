@@ -37,6 +37,17 @@ from IPython.terminal.embed import InteractiveShellEmbed
 
 # df = pd.read_csv('sample_news/yahoonews.csv')
 # news_list = df.values
+
+def extract_words(text):
+    node = mecab.parseToNode(text)
+    words = []
+    while node:
+        meta = node.feature.split(",")
+        if meta[0] == "名詞":
+            words.append(node.surface)
+        node = node.next
+    return words
+
 f = open('sample_news/yahoo_news.json', 'r')
 news_list = json.load(f)
 f.close()
@@ -46,14 +57,7 @@ dictionary = corpora.Dictionary.load(dictionary_name)
 for key in news_list:
     news = news_list[key]
     text = news['content']
-    node = mecab.parseToNode(text)
-    words = []
-    while node:
-        meta = node.feature.split(",")
-        if meta[0] == "名詞":
-            words.append(node.surface)
-        node = node.next
-
+    words = extract_words(text)
     new_dictionary = corpora.Dictionary([words])
     dictionary.merge_with(new_dictionary)
     dictionary.save(dictionary_name)
@@ -62,13 +66,7 @@ for i in range(100):
     for key in news_list:
         news = news_list[key]
         text = news['content']
-        node = mecab.parseToNode(text)
-        words = []
-        while node:
-            meta = node.feature.split(",")
-            if meta[0] == "名詞":
-                words.append(node.surface)
-            node = node.next
+        words = extract_words(text)
 
         y = np.zeros(3).astype(np.float32)
         index = int(news['label'])
@@ -90,14 +88,7 @@ for i in range(100):
         optimizer.update()
 
 text = "【森下悠里が結婚 昨年から交際】タレントの森下悠里がインスタグラムで、昨年末から交際していた男性と6月8日に結婚したことを報告。10年来の友人だという。"
-node = mecab.parseToNode(text)
-
-words = []
-while node:
-    meta = node.feature.split(",")
-    if meta[0] == "名詞":
-        words.append(node.surface)
-    node = node.next
+words = extract_words(text)
 
 # embed()
 

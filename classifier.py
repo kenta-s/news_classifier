@@ -40,6 +40,9 @@ from IPython.terminal.embed import InteractiveShellEmbed
 f = open('sample_news/yahoo_news.json', 'r')
 news_list = json.load(f)
 f.close()
+
+dictionary_name = 'words.dict'
+dictionary = corpora.Dictionary.load(dictionary_name)
 for key in news_list:
     news = news_list[key]
     y = np.zeros(3).astype(np.float32)
@@ -56,7 +59,9 @@ for key in news_list:
             words.append(node.surface)
         node = node.next
 
-    dictionary = corpora.Dictionary([words])
+    new_dictionary = corpora.Dictionary([words])
+    dictionary.merge_with(new_dictionary)
+    dictionary.save(dictionary_name)
     vec = dictionary.doc2bow(words)
     dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
     cut_dense = dense[0:10]

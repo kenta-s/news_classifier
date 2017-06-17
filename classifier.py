@@ -51,16 +51,15 @@ def extract_words(text):
 f = open('sample_news/yahoo_news.json', 'r')
 news_list = json.load(f)
 f.close()
-
-dictionary_name = 'words.dict'
-dictionary = corpora.Dictionary.load(dictionary_name)
+dictionary_name = 'words.txt'
+dictionary = corpora.Dictionary.load_from_text(dictionary_name)
 for key in news_list:
     news = news_list[key]
     text = news['content']
     words = extract_words(text)
     new_dictionary = corpora.Dictionary([words])
     dictionary.merge_with(new_dictionary)
-    dictionary.save(dictionary_name)
+    dictionary.save_as_text(dictionary_name)
 
 for i in range(100):
     for key in news_list:

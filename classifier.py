@@ -42,10 +42,10 @@ news_list = json.load(f)
 f.close()
 for key in news_list:
     news = news_list[key]
-    y = np.zeros(8).astype(np.float32)
+    y = np.zeros(3).astype(np.float32)
     index = int(news['label'])
     y[index] = 1.0
-    y = Variable(y).reshape(1, 8)
+    y = Variable(y).reshape(1, 3)
 
     text = news['content']
     node = mecab.parseToNode(text)

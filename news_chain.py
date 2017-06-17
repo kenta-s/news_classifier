@@ -9,8 +9,8 @@ import chainer.links as L
 class NewsChain(Chain):
     def __init__(self):
         super(NewsChain, self).__init__(
-            l1 = L.Linear(10, 8), # what if the words are less than 10 words?
-            l2 = L.Linear(8, 8)
+            l1 = L.Linear(10, 3), # what if the words are less than 10 words?
+            l2 = L.Linear(3, 3)
         )
 
     def __call__(self, x, y):

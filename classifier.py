@@ -94,12 +94,10 @@ for j in range(5000):
         optimizer.update()
 
 # # saving model:
-# serializers.save_npz('hoge_01.model', model)
-# serializers.save_npz('hoge_01.state', optimizer)
+# serializers.save_npz('hoge_01.npz', model)
 
 # # loading model:
-# serializers.load_npz('hoge_01.model', model)
-# serializers.load_npz('hoge_01.state', optimizer)
+# serializers.load_npz('hoge_01.npz', model)
 
 xt = Variable(xtest)
 yt = model.fwd(xt)

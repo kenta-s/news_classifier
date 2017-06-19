@@ -8,7 +8,7 @@
 # $ pip install gensim
 
 import numpy as np
-from chainer import Variable, optimizers
+from chainer import Variable, optimizers, serializers
 from news_chain import NewsChain
 model = NewsChain()
 optimizer = optimizers.SGD() # TODO: change this to Adam
@@ -52,14 +52,18 @@ for key in news_list:
 dictionary = corpora.Dictionary(words)
 dictionary.save_as_text(dictionary_name)
 
+def convert_text_into_dense(text):
+    words = extract_words(text)
+    vec = dictionary.doc2bow(words)
+    dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
+    return dense
+
 x_list = []
 y_list = []
 for key in news_list:
     news = news_list[key]
     text = news['content']
-    words = extract_words(text)
-    vec = dictionary.doc2bow(words)
-    dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
+    dense = convert_text_into_dense(text)
     x_list.append(dense)
     y_list.append(int(news['label']))
 
@@ -88,6 +92,14 @@ for j in range(5000):
         loss = model(x, y)
         loss.backward()
         optimizer.update()
+
+# # saving model:
+# serializers.save_npz('hoge_01.model', model)
+# serializers.save_npz('hoge_01.state', optimizer)
+
+# # loading model:
+# serializers.load_npz('hoge_01.model', model)
+# serializers.load_npz('hoge_01.state', optimizer)
 
 xt = Variable(xtest)
 yt = model.fwd(xt)

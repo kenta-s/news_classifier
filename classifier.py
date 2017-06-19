@@ -86,7 +86,7 @@ ytrain = Y2[index[index % 2 != 0]]
 xtest = X[index[index % 2 == 0]]
 yans = Y[index[index % 2 == 0]]
 
-n = 98
+n = len(xtrain)
 bs = 25
 for j in range(5000):
     sffindx = np.random.permutation(n)

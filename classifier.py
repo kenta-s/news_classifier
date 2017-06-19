@@ -55,6 +55,10 @@ def convert_text_into_dense(text):
     dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
     return dense
 
+def convert_text_into_variable(text):
+    dense = convert_text_into_dense(text)
+    return Variable(np.array([dense]))
+
 input_length = len(dictionary)
 model = NewsChain(input_length)
 optimizer = optimizers.SGD() # TODO: change this to Adam

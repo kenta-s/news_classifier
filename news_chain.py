@@ -7,9 +7,9 @@ import chainer.functions as F
 import chainer.links as L
 
 class NewsChain(Chain):
-    def __init__(self):
+    def __init__(self, input_length):
         super(NewsChain, self).__init__(
-            l1 = L.Linear(2471, 10),
+            l1 = L.Linear(input_length, 10),
             l2 = L.Linear(10, 3)
         )
 

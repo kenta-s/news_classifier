@@ -10,9 +10,6 @@
 import numpy as np
 from chainer import Variable, optimizers, serializers
 from news_chain import NewsChain
-model = NewsChain()
-optimizer = optimizers.SGD() # TODO: change this to Adam
-optimizer.setup(model)
 
 import MeCab
 from gensim import corpora, matutils
@@ -57,6 +54,11 @@ def convert_text_into_dense(text):
     vec = dictionary.doc2bow(words)
     dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
     return dense
+
+input_length = len(dictionary)
+model = NewsChain(input_length)
+optimizer = optimizers.SGD() # TODO: change this to Adam
+optimizer.setup(model)
 
 x_list = []
 y_list = []

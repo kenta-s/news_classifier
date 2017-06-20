@@ -14,21 +14,21 @@ from IPython.terminal.embed import InteractiveShellEmbed
 class NewsSpider(Spider):
     name = 'news_spider'
 
-    start_urls = ['https://twitter.com/YahooNewsTopics']
+    start_urls = ['https://twitter.com/YahooNewsTopics', 'https://twitter.com/news_line_me?lang=ja']
     custom_settings = {
         "DOWNLOAD_DELAY": 1,
     }
 
     def parse(self, response):
         if 'YahooNews' in response.url:
-            self.yahoo_news(response)
+            self.scrape_news('unlabelled_data/yahoo_news.json', 'YahooNews', response)
+        elif 'news_line_me' in response.url:
+            self.scrape_news('unlabelled_data/news_line_me.json', 'news_line_me', response)
         else:
             return False
             # yield scrapy.Request(tweet, callback=self.parse_item)
 
-    def yahoo_news(self, response):
-        source = 'YahooNews'
-        file_name = 'unlabelled_data/yahoo_news.json'
+    def scrape_news(self, file_name, source, response):
         f = open(file_name, 'r')
         tweets = json.load(f)
         f.close()
@@ -40,7 +40,6 @@ class NewsSpider(Spider):
         news_json = codecs.open(file_name, 'w', 'utf-8')
         json.dump(tweets, news_json, ensure_ascii=False)
         news_json.close()
-
 
     def parse_item(self, response):
         return True

@@ -36,7 +36,7 @@ def extract_words(text):
         node = node.next
     return words
 
-f = open('sample_news/yahoo_news.json', 'r')
+f = open('sample_news/news.json', 'r')
 news_list = json.load(f)
 news_list = news_list['YahooNews'] # TODO: deal with other News
 f.close()

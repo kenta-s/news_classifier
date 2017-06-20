@@ -36,7 +36,7 @@ class NewsSpider(Spider):
         for tweet_item in response.css(tweet_list):
             tweet_id = tweet_item.css('li::attr(data-item-id)').extract()[0]
             tweet_text = tweet_item.css('p.tweet-text::text').extract()[0]
-            tweets[tweet_id] = {'source': source, 'content': tweet_text, 'label': None}
+            tweets[source][tweet_id] = {'content': tweet_text, 'label': None}
         news_json = codecs.open(file_name, 'w', 'utf-8')
         json.dump(tweets, news_json, ensure_ascii=False)
         news_json.close()

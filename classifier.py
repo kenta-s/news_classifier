@@ -38,6 +38,7 @@ def extract_words(text):
 
 f = open('sample_news/yahoo_news.json', 'r')
 news_list = json.load(f)
+news_list = news_list['YahooNews'] # TODO: deal with other News
 f.close()
 dictionary_name = 'words.txt'
 words = []

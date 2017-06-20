@@ -36,50 +36,93 @@ def extract_words(text):
         node = node.next
     return words
 
-f = open('sample_news/news.json', 'r')
-news_list = json.load(f)
-news_list = news_list['YahooNews'] # TODO: deal with other News
-f.close()
-dictionary_name = 'words.txt'
-words = []
-for key in news_list:
-    news = news_list[key]
-    text = news['content']
-    words.append(extract_words(text))
+def get_news_list():
+    f = open('sample_news/news.json', 'r')
+    news_list = json.load(f)
+    news_list = [news_list['YahooNews'], news_list['news_line_me']]
+    f.close()
 
-dictionary = corpora.Dictionary(words)
-dictionary.save_as_text(dictionary_name)
+    return news_list
 
-def convert_text_into_dense(text):
+def get_dictionary(news_list):
+    dictionary_name = 'words.txt'
+    words = []
+    for each_news in news_list:
+        for key in each_news:
+            news = each_news[key]
+            text = news['content']
+            words.append(extract_words(text))
+
+    dictionary = corpora.Dictionary(words)
+    dictionary.save_as_text(dictionary_name)
+
+    return dictionary
+
+def convert_text_into_dense(dictionary, text):
     words = extract_words(text)
     vec = dictionary.doc2bow(words)
     dense = list(matutils.corpus2dense([vec], num_terms=len(dictionary)).T[0])
     return dense
 
-def convert_text_into_variable(text):
-    dense = convert_text_into_dense(text)
+def convert_text_into_variable(dictionary, text):
+    dense = convert_text_into_dense(dictionary, text)
     return Variable(np.array([dense]))
+
+def prepare_train_variables(dictionary, news_list):
+    x_list = []
+    y_list = []
+    for key in news_list:
+        news = news_list[key]
+        text = news['content']
+        dense = convert_text_into_dense(dictionary, text)
+        x_list.append(dense)
+        y_list.append(int(news['label']))
+
+    X = np.array(x_list).astype(np.float32)
+    Y = np.array(y_list).astype(np.int32)
+    N = len(X)
+    Y2 = np.zeros(3 * N).reshape(N, 3).astype(np.float32)
+    for i in range(N):
+        Y2[i, Y[i]] = 1.0
+
+    return X, Y, N, Y2
+
+def train(model, optimizer, xtrain, ytrain):
+    n = len(xtrain)
+    bs = 25
+    for j in range(5000):
+        sffindx = np.random.permutation(n)
+        for i in range(0, n, bs):
+            idx = sffindx[i:(i+bs) if (i+bs) < n else n]
+            x = Variable(xtrain[idx])
+            y = Variable(ytrain[idx])
+            model.zerograds()
+            loss = model(x, y)
+            loss.backward()
+            optimizer.update()
+
+def exec_test(model, x):
+    y = model.fwd(x)
+    ans = y.data
+    nrow, ncol = ans.shape
+    ok = 0
+
+    for i in range(nrow):
+        cls = np.argmax(ans[i,:])
+        if cls == yans[i]:
+          ok += 1
+
+    print(ok, "/", nrow, " = ", (ok * 1.0)/nrow)
+
+news_list = get_news_list()
+dictionary = get_dictionary(news_list)
 
 input_length = len(dictionary)
 model = NewsChain(input_length)
 optimizer = optimizers.SGD() # TODO: change this to Adam
 optimizer.setup(model)
 
-x_list = []
-y_list = []
-for key in news_list:
-    news = news_list[key]
-    text = news['content']
-    dense = convert_text_into_dense(text)
-    x_list.append(dense)
-    y_list.append(int(news['label']))
-
-X = np.array(x_list).astype(np.float32)
-Y = np.array(y_list).astype(np.int32)
-N = len(X)
-Y2 = np.zeros(3 * N).reshape(N, 3).astype(np.float32)
-for i in range(N):
-    Y2[i, Y[i]] = 1.0
+X, Y, N, Y2 = prepare_train_variables(dictionary, news_list[0])
 
 index = np.arange(N)
 xtrain = X[index[index % 2 != 0]]
@@ -87,34 +130,13 @@ ytrain = Y2[index[index % 2 != 0]]
 xtest = X[index[index % 2 == 0]]
 yans = Y[index[index % 2 == 0]]
 
-n = len(xtrain)
-bs = 25
-for j in range(5000):
-    sffindx = np.random.permutation(n)
-    for i in range(0, n, bs):
-        idx = sffindx[i:(i+bs) if (i+bs) < n else n]
-        x = Variable(xtrain[idx])
-        y = Variable(ytrain[idx])
-        model.zerograds()
-        loss = model(x, y)
-        loss.backward()
-        optimizer.update()
+train(model, optimizer, xtrain, ytrain)
+
+x = Variable(xtest)
+exec_test(model, x)
 
 # # saving model:
 # serializers.save_npz('hoge_01.npz', model)
 
 # # loading model:
 # serializers.load_npz('hoge_01.npz', model)
-
-xt = Variable(xtest)
-yt = model.fwd(xt)
-ans = yt.data
-nrow, ncol = ans.shape
-ok = 0
-
-for i in range(nrow):
-    cls = np.argmax(ans[i,:])
-    if cls == yans[i]:
-      ok += 1
-
-print(ok, "/", nrow, " = ", (ok * 1.0)/nrow)

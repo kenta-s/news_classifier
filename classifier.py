@@ -120,7 +120,7 @@ dictionary = get_dictionary(news_list)
 
 input_length = len(dictionary)
 model = NewsChain(input_length)
-optimizer = optimizers.SGD() # TODO: change this to Adam
+optimizer = optimizers.Adam()
 optimizer.setup(model)
 
 X, Y, N, Y2 = prepare_train_variables(dictionary, news_list)

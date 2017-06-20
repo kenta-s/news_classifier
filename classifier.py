@@ -71,12 +71,13 @@ def convert_text_into_variable(dictionary, text):
 def prepare_train_variables(dictionary, news_list):
     x_list = []
     y_list = []
-    for key in news_list:
-        news = news_list[key]
-        text = news['content']
-        dense = convert_text_into_dense(dictionary, text)
-        x_list.append(dense)
-        y_list.append(int(news['label']))
+    for each_news in news_list:
+        for key in each_news:
+            news = each_news[key]
+            text = news['content']
+            dense = convert_text_into_dense(dictionary, text)
+            x_list.append(dense)
+            y_list.append(int(news['label']))
 
     X = np.array(x_list).astype(np.float32)
     Y = np.array(y_list).astype(np.int32)
@@ -122,7 +123,7 @@ model = NewsChain(input_length)
 optimizer = optimizers.SGD() # TODO: change this to Adam
 optimizer.setup(model)
 
-X, Y, N, Y2 = prepare_train_variables(dictionary, news_list[0])
+X, Y, N, Y2 = prepare_train_variables(dictionary, news_list)
 
 index = np.arange(N)
 xtrain = X[index[index % 2 != 0]]

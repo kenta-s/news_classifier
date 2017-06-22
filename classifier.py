@@ -39,7 +39,7 @@ def extract_words(text):
 def get_news_list():
     f = open('sample_news/news.json', 'r')
     news_list = json.load(f)
-    news_list = [news_list['YahooNews'], news_list['news_line_me']]
+    news_list = [news_list['YahooNews'], news_list['news_line_me'], news_list['nhk_news']]
     f.close()
 
     return news_list

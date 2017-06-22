@@ -115,6 +115,16 @@ def exec_test(model, x):
 
     print(ok, "/", nrow, " = ", (ok * 1.0)/nrow)
 
+def classify_text(model, dictionary, text):
+    x = convert_text_into_variable(dictionary, text)
+    idx = str(np.argmax(model.fwd(x).data))
+
+    f = open('categories.json', 'r')
+    categories = json.load(f)
+    f.close()
+
+    return categories[idx]
+
 news_list = get_news_list()
 dictionary = get_dictionary(news_list)
 

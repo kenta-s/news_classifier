@@ -136,6 +136,8 @@ train(model, optimizer, xtrain, ytrain)
 x = Variable(xtest)
 exec_test(model, x)
 
+serializers.save_npz('news_classifier.npz', model)
+
 # # saving model:
 # serializers.save_npz('hoge_01.npz', model)
 

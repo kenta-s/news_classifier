@@ -150,7 +150,8 @@ train(model, optimizer, xtrain, ytrain)
 x = Variable(xtest)
 exec_test(model, x)
 
-serializers.save_npz('news_classifier.npz', model)
+dictionary.save_as_text('trained/words.txt')
+serializers.save_npz('trained/news_classifier.npz', model)
 
 # # saving model:
 # serializers.save_npz('hoge_01.npz', model)

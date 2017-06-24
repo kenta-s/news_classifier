@@ -19,7 +19,8 @@ class NewsSpider(Spider):
         'https://twitter.com/news_line_me?lang=ja',
         'https://twitter.com/nhk_news?lang=ja',
         'https://twitter.com/TwitterNewsJP?lang=ja',
-        'https://twitter.com/mainichi'
+        'https://twitter.com/mainichi',
+        'https://twitter.com/Yomiuri_Online'
     ]
     custom_settings = {
         "DOWNLOAD_DELAY": 1,
@@ -36,6 +37,8 @@ class NewsSpider(Spider):
             self.scrape_news('unlabelled_data/twitter_news_jp.json', 'TwitterNewsJP', response)
         elif 'mainichi' in response.url:
             self.scrape_news('unlabelled_data/mainichi.json', 'mainichi', response)
+        elif 'Yomiuri_Online' in response.url:
+            self.scrape_news('unlabelled_data/yomiuri_online.json', 'Yomiuri_Online', response)
         else:
             return False
             # yield scrapy.Request(tweet, callback=self.parse_item)

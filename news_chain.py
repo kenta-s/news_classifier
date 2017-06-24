@@ -15,7 +15,7 @@ class NewsChain(Chain):
         )
 
     def __call__(self, x, y):
-        return F.mean_squared_error(self.fwd(x), y)
+        return F.softmax_cross_entropy(self.fwd(x), y)
 
     def fwd(self, x):
         h1 = F.softmax(self.l1(x))

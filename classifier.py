@@ -86,9 +86,7 @@ def prepare_train_variables(dictionary, news_list):
     X = np.array(x_list).astype(np.float32)
     Y = np.array(y_list).astype(np.int32)
     N = len(X)
-    Y2 = np.zeros(3 * N).reshape(N, 3).astype(np.float32)
-    for i in range(N):
-        Y2[i, Y[i]] = 1.0
+    Y2 = Y
 
     return X, Y, N, Y2
 

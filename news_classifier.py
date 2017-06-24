@@ -33,6 +33,7 @@ def convert_text_into_variable(dictionary, text):
 dictionary = corpora.Dictionary.load_from_text('trained/words.txt')
 input_length = len(dictionary)
 model = NewsChain(input_length)
+serializers.load_npz('trained/news_classifier.npz', model)
 
 text = sys.argv[1]
 x = convert_text_into_variable(dictionary, text)

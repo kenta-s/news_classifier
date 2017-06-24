@@ -14,13 +14,16 @@ from IPython.terminal.embed import InteractiveShellEmbed
 class NewsSpider(Spider):
     name = 'news_spider'
 
+    # start_urls = [
+    #     'https://twitter.com/YahooNewsTopics',
+    #     'https://twitter.com/news_line_me?lang=ja',
+    #     'https://twitter.com/nhk_news?lang=ja',
+    #     'https://twitter.com/TwitterNewsJP?lang=ja',
+    #     'https://twitter.com/mainichi',
+    #     'https://twitter.com/Yomiuri_Online'
+    # ]
     start_urls = [
-        'https://twitter.com/YahooNewsTopics',
-        'https://twitter.com/news_line_me?lang=ja',
-        'https://twitter.com/nhk_news?lang=ja',
-        'https://twitter.com/TwitterNewsJP?lang=ja',
-        'https://twitter.com/mainichi',
-        'https://twitter.com/Yomiuri_Online'
+        'https://twitter.com/YahooNewsTopics'
     ]
     custom_settings = {
         "DOWNLOAD_DELAY": 1,
